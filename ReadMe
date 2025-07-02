@@ -1,0 +1,24 @@
+## 폴더구성
+- Scene
+	- Main.tsnc  - [[Main.tsnc]]
+	-  Player.tsnc
+	- Enemy.tsnc
+	- Gird.tsnc
+	- GameManager.tsnc
+	- UI.tsnc
+- Script
+	- Player.gb
+	- Enemy.gb
+	- Gird.gb
+	- GameManager.gb
+- Asset
+	- Images
+	- Sound
+
+## 개발 계획
+- 8X8 맵생성
+- 전투 시스템 (공격, 방어, 체력감소 등등)
+- 적(조무래기 , 보스)
+- 게임 over / end 생성
+- esc -pause
+- 3stage (1stage - boss - 2stage - boss - 3tage - final boss)
