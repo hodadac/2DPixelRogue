@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://8a4phx04jhos"]
+
+[ext_resource type="Texture2D" uid="uid://dsjr1u7jm654l" path="res://Asset/images/AllPokemon.png" id="1_tcjvw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tcjvw"]
+size = Vector2(64, 64)
+
+[node name="Enermy" type="CharacterBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2.71201e-06, 1.78814e-07)
+scale = Vector2(0.380952, 0.380952)
+texture = ExtResource("1_tcjvw")
+hframes = 10
+vframes = 26
+frame = 10
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_tcjvw")

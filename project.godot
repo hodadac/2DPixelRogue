@@ -1,0 +1,26 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="pixelRog"
+run/main_scene="uid://cqwnwya1uvuhq"
+config/features=PackedStringArray("4.4", "Mobile")
+
+[display]
+
+window/size/viewport_width=320
+window/size/viewport_height=256
+window/size/initial_position=Vector2i(160, 128)
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

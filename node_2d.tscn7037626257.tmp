@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqwnwya1uvuhq"]
+
+[ext_resource type="Script" uid="uid://2n013chcks8v" path="res://grid.gd" id="1_0e48y"]
+[ext_resource type="PackedScene" uid="uid://c5yhl1qy20s1a" path="res://Player/player.tscn" id="2_epypp"]
+[ext_resource type="Script" uid="uid://cv0dqfrxn6eav" path="res://Player/player.gd" id="3_epypp"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Grid" type="Node2D" parent="."]
+script = ExtResource("1_0e48y")
+
+[node name="Player" parent="." instance=ExtResource("2_epypp")]
+position = Vector2(32, 31)
+script = ExtResource("3_epypp")
+move_speed = null

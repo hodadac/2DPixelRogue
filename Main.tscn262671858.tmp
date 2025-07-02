@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqwnwya1uvuhq"]
+
+[ext_resource type="Script" uid="uid://dgsdj1qjtsxk2" path="res://GameManager.gd" id="1_3dxm6"]
+[ext_resource type="Script" uid="uid://2n013chcks8v" path="res://grid.gd" id="2_lgr22"]
+[ext_resource type="PackedScene" uid="uid://c5yhl1qy20s1a" path="res://player.tscn" id="3_trn2v"]
+[ext_resource type="Script" uid="uid://cv0dqfrxn6eav" path="res://Player.gd" id="4_03owx"]
+[ext_resource type="PackedScene" uid="uid://8a4phx04jhos" path="res://enemy.tscn" id="5_wkp8b"]
+[ext_resource type="Script" uid="uid://dmesfw2ykrfp5" path="res://Enemy.gd" id="6_20pc6"]
+
+[node name="Main" type="Node2D"]
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_3dxm6")
+
+[node name="Grid" type="Node2D" parent="."]
+script = ExtResource("2_lgr22")
+
+[node name="Player" parent="." instance=ExtResource("3_trn2v")]
+position = Vector2(32, 31)
+script = ExtResource("4_03owx")
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Enemy1" parent="Enemies" instance=ExtResource("5_wkp8b")]
+position = Vector2(225, 160)
+script = ExtResource("6_20pc6")
+
+[node name="Enemy2" parent="Enemies" instance=ExtResource("5_wkp8b")]
+position = Vector2(97, 161)
+script = ExtResource("6_20pc6")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="GameUI" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerStats" type="VBoxContainer" parent="UI/GameUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HPLabel" type="Label" parent="UI/GameUI/PlayerStats"]
+layout_mode = 2
+
+[node name="TurnLabel" type="Label" parent="UI/GameUI/PlayerStats"]
+layout_mode = 2
+
+[node name="BattleUI" type="VBoxContainer" parent="UI/GameUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BattleLog" type="RichTextLabel" parent="UI/GameUI/BattleUI"]
+layout_mode = 2
+
+[node name="AttackButton" type="Button" parent="UI/GameUI/BattleUI"]
+layout_mode = 2
+
+[node name="DefendButton" type="Button" parent="UI/GameUI/BattleUI"]
+layout_mode = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
