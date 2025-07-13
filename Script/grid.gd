@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var grid_size: int = 4
+@export var grid_size: int = 10
 @export var cell_size: int = 64
 @export var line_color: Color = Color.GRAY
 @export var line_width: float = 2.0

@@ -3,7 +3,7 @@ extends Node
 enum GameState { EXPLORATION, BATTLE, GAME_OVER }
 enum TurnState { PLAYER_TURN, ENEMY_TURN }
 
-@export var grid_size: int = 4
+@export var grid_size: int = 10
 @export var cell_size: int = 64
 
 var current_state: GameState = GameState.EXPLORATION

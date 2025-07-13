@@ -33,9 +33,11 @@ script = ExtResource("6_vm4ek")
 
 [node name="GameUI" type="Control" parent="UI"]
 layout_mode = 3
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 8
 
 [node name="PlayerStats" type="VBoxContainer" parent="UI/GameUI"]
@@ -51,15 +53,15 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="BattleUI" type="VBoxContainer" parent="UI/GameUI"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(300, 200)
 layout_mode = 0
-offset_left = 4.0
-offset_top = 152.0
-offset_right = 67.0
-offset_bottom = 252.0
+offset_left = 10.0
+offset_top = 711.0
+offset_right = 310.0
+offset_bottom = 920.0
 
 [node name="BattleLog" type="RichTextLabel" parent="UI/GameUI/BattleUI"]
-custom_minimum_size = Vector2(100, 30)
+custom_minimum_size = Vector2(400, 100)
 layout_mode = 2
 
 [node name="AttackButton" type="Button" parent="UI/GameUI/BattleUI"]
@@ -72,7 +74,7 @@ text = "defend
 "
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(161, 127)
+position = Vector2(701, 396)
 
 [connection signal="pressed" from="UI/GameUI/BattleUI/AttackButton" to="GameManager" method="_on_attack_button_pressed"]
 [connection signal="pressed" from="UI/GameUI/BattleUI/DefendButton" to="GameManager" method="_on_defend_button_pressed"]
