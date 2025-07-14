@@ -19,15 +19,53 @@ var occupied_positions: Dictionary = {}
 
 var current_enemy: CharacterBody2D = null
 
+# OPTIMIZED UI UPDATE SYSTEM
+var ui_update_queue: Array = []
+var ui_update_timer: Timer
+var ui_batch_update_interval: float = 0.1
+var ui_needs_update: bool = false
+
 func _ready():
 	initialize_grid()
 	setup_initial_positions()
-	update_ui()
+	setup_ui_update_system()
+	request_ui_update()
 	battle_ui.visible = false
 	
 	# 신호 연결
 	player.battle_triggered.connect(_on_battle_triggered)
 	player.moved.connect(_on_player_moved)
+
+func setup_ui_update_system():
+	"""Optimized UI update system using batching"""
+	ui_update_timer = Timer.new()
+	ui_update_timer.wait_time = ui_batch_update_interval
+	ui_update_timer.one_shot = false
+	ui_update_timer.timeout.connect(_process_ui_updates)
+	add_child(ui_update_timer)
+	ui_update_timer.start()
+
+func request_ui_update():
+	"""Queue UI update instead of immediate update"""
+	ui_needs_update = true
+
+func _process_ui_updates():
+	"""Process UI updates in batch"""
+	if ui_needs_update:
+		_execute_ui_update()
+		ui_needs_update = false
+
+func _execute_ui_update():
+	"""Execute the actual UI update"""
+	var hp_label = $"../UI/GameUI/PlayerStats/HPLabel"
+	var turn_label = $"../UI/GameUI/PlayerStats/TurnLabel"
+	
+	if hp_label:
+		hp_label.text = "HP: " + str(player.health) + "/" + str(player.max_health)
+	
+	if turn_label:
+		var state_text = "탐험" if current_state == GameState.EXPLORATION else "전투"
+		turn_label.text = "상태: " + state_text
 
 func initialize_grid():
 	# 그리드 좌표 초기화 (0,0 ~ 3,3)
@@ -44,14 +82,14 @@ func setup_initial_positions():
 	# 적 배치
 	var enemies = enemies_node.get_children()
 	if enemies.size() > 0:
-		enemies[0].grid_pos = Vector2(2, 1)
-		enemies[0].position = grid_to_world(Vector2(2, 1))
-		occupied_positions[Vector2(2, 1)] = enemies[0]
+		enemies[0].grid_pos = Vector2(6, 6)
+		enemies[0].position = grid_to_world(Vector2(6, 6))
+		occupied_positions[Vector2(6, 6)] = enemies[0]
 	
 	if enemies.size() > 1:
-		enemies[1].grid_pos = Vector2(3, 3)
-		enemies[1].position = grid_to_world(Vector2(3, 3))
-		occupied_positions[Vector2(3, 3)] = enemies[1]
+		enemies[1].grid_pos = Vector2(8, 2)
+		enemies[1].position = grid_to_world(Vector2(8, 2))
+		occupied_positions[Vector2(8, 2)] = enemies[1]
 
 func grid_to_world(grid_pos: Vector2) -> Vector2:
 	return Vector2(grid_pos.x * cell_size + cell_size/2, grid_pos.y * cell_size + cell_size/2)
@@ -79,13 +117,13 @@ func _on_battle_triggered(enemy):
 	battle_ui.visible = true
 	
 	add_battle_log("전투 시작! " + enemy.name + "과 마주쳤다!")
-	update_ui()
+	request_ui_update()
 
 func _on_player_moved():
 	if current_state == GameState.EXPLORATION:
 		# 적 턴 진행
 		process_enemy_turns()
-	update_ui()
+	request_ui_update()
 
 func process_enemy_turns():
 	for enemy in enemies_node.get_children():
@@ -95,17 +133,6 @@ func process_enemy_turns():
 func add_battle_log(text: String):
 	if battle_log:
 		battle_log.append_text(text + "\n")
-
-func update_ui():
-	var hp_label = $"../UI/GameUI/PlayerStats/HPLabel"
-	var turn_label = $"../UI/GameUI/PlayerStats/TurnLabel"
-	
-	if hp_label:
-		hp_label.text = "HP: " + str(player.health) + "/" + str(player.max_health)
-	
-	if turn_label:
-		var state_text = "탐험" if current_state == GameState.EXPLORATION else "전투"
-		turn_label.text = "상태: " + state_text
 
 func _on_attack_button_pressed():
 	if current_state == GameState.BATTLE and current_enemy:
@@ -153,4 +180,46 @@ func end_battle():
 	current_state = GameState.EXPLORATION
 	battle_ui.visible = false
 	current_enemy = null
-	update_ui()
+	request_ui_update()
+
+# UTILITY FUNCTIONS FOR ENEMY AI
+func get_distance_to_player(enemy_pos: Vector2) -> float:
+	"""Get grid distance between enemy and player"""
+	var player_pos = player.grid_pos
+	return abs(enemy_pos.x - player_pos.x) + abs(enemy_pos.y - player_pos.y)
+
+func is_player_in_range(enemy_pos: Vector2, range: int) -> bool:
+	"""Check if player is within enemy range"""
+	return get_distance_to_player(enemy_pos) <= range
+
+func get_path_to_player(enemy_pos: Vector2) -> Array:
+	"""Get path from enemy to player using A* pathfinding"""
+	var player_pos = player.grid_pos
+	var path = []
+	
+	# Simple pathfinding - move toward player one step at a time
+	var current_pos = enemy_pos
+	var max_steps = 3  # Maximum 3 steps
+	
+	for i in range(max_steps):
+		if current_pos == player_pos:
+			break
+			
+		var direction = Vector2.ZERO
+		
+		# Choose direction based on Manhattan distance
+		if abs(player_pos.x - current_pos.x) > abs(player_pos.y - current_pos.y):
+			direction.x = sign(player_pos.x - current_pos.x)
+		else:
+			direction.y = sign(player_pos.y - current_pos.y)
+		
+		var next_pos = current_pos + direction
+		
+		# Check if next position is valid and not occupied
+		if is_valid_position(next_pos) and not is_position_occupied(next_pos):
+			path.append(next_pos)
+			current_pos = next_pos
+		else:
+			break
+	
+	return path
