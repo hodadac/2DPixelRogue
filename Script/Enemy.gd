@@ -3,7 +3,7 @@ extends CharacterBody2D
 @export var max_health: int = 50
 @export var attack_damage: int = 15
 @export var enemy_name: String = "피존투"
-@export var detection_range: int = 3  # 3 spaces detection range
+@export var detection_range: int = 4  # 3 spaces detection range
 @export var move_speed: float = 0.5
 
 var health: int
